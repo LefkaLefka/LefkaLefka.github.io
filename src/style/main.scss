@@ -1,0 +1,99 @@
+body {
+  background-color: #E0FFFF;
+}
+.wrap {
+  min-width: 455px;
+  margin: 0 auto;
+  font-family: century gothic, footlight mt light;
+}
+.statistic {
+  box-shadow: 0 0 7px rgba(0, 0, 0, 0.5);
+  border-radius: 3px;
+  height: 70px;
+}
+.left {
+  float: left;
+  margin-left: 80px;
+}
+.right {
+  float: right;
+  margin-right: 80px;
+}
+.textStatistic {
+  font-size: 55px;
+  font-family: consolas;
+  color: #035d5f;
+  font-weight: 600;
+}
+.text {
+  text-align: center;
+  margin: 0 auto;
+  font-size: 90px;
+  font-family: consolas;
+  color: #035d5f;
+}
+.textSpec {
+  font-size: 40px;
+  vertical-align: middle;
+  font-family: cursive;
+  color: #ff5c5c;
+}
+.table {
+  margin: 50px auto 75px auto;
+  box-shadow: 0 0 100px rgba(0, 0, 0, 0.5);
+  border-radius: 3px;
+  border-spacing: 8px;
+}
+.cell {
+  width: 80px;
+  height: 80px;
+  box-shadow: 0 0 7px rgba(0, 0, 0, 0.5);
+  cursor: pointer;
+  border-radius: 1px;
+  text-align: center;
+  vertical-align: top;
+  font-size: 57px;
+  font-weight: 500;
+}
+
+
+.footer {
+  font-weight: bolder;
+  font-size: 15px;
+  color: #40E0D0;
+  text-shadow: 0 0 2px rgba(205, 173, 0, 0.2);
+  text-align: center;
+}
+h1.footer a {
+  text-decoration: none;
+  color: rgb(59, 201, 187);
+}
+h1.footer a:hover {
+  text-decoration: underline;
+}
+.info {
+  width: 300px;
+  box-shadow: 0 0 7px rgba(0, 0, 0, 0.5);
+  display: inline;
+  margin-top: 40px;
+  opacity: 0.3;
+  padding: 5px;
+}
+.info:hover {
+  opacity: 1;
+  background-color: #d6f4f4 ;
+}
+.info img {
+  float: left;
+  margin-right: 7px;
+}
+.info div {
+  width: 300px;
+  display: inline-block;
+  line-height: 200%;
+  margin: 5px;
+}
+.info div p {
+  margin: 0;
+  vertical-align: center;
+}
