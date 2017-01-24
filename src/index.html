@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Tic-Tac-Toe</title>
+        <meta charset="UTF-8">
+        <link rel="stylesheet" type="text/css" href="./build/css/main.css">
+    </head>
+    <body>
+        <div class="wrap">
+
+            <div class="statistic">
+                <span class="left textStatistic" data-player1>Player 1: 0</span>
+                <span class="right textStatistic" data-player2>Player 2: 0</span>
+            </div>
+
+            <h1 class="text">x<span class="textSpec"> vs </span>o</h1>
+
+            <table class="table">
+                <tr>
+                    <td class="cell" data-cell>x</td>
+                    <td class="cell" data-cell>o</td>
+                    <td class="cell" data-cell>o</td>
+                </tr>
+                <tr>
+                    <td class="cell" data-cell>x</td>
+                    <td class="cell" data-cell>o</td>
+                    <td class="cell" data-cell>x</td>
+                </tr>
+                <tr>
+                    <td class="cell" data-cell>o</td>
+                    <td class="cell" data-cell>x</td>
+                    <td class="cell" data-cell>x</td>
+                </tr>
+            </table>
+
+            <div class="left info">
+                <div>
+                    <img src="../build/img/wasd.png" alt="">
+                    <p> - movement within cells</p>
+                </div>
+
+                <div>
+                    <img src="../build/img/z.png" alt="">
+                    <p> - put a symbol</p>
+                </div>
+            </div>
+
+            <div class="right info">
+                <div>
+                    <img src="../build/img/arrow.png" alt="">
+                    <p> - movement within cells</p>
+                </div>
+                <div>
+                    <img src="../build/img/0.png" alt="">
+                    <p> - put a symbol</p>
+                </div>
+            </div>
+
+            <h1 class="footer">Created by <a target="_blank" href="https://github.com/LefkaLefka">Lefka</a></h1>
+        </div>
+
+        <script src="../node_modules/jquery/dist/jquery.js"></script>
+        <script src="../build/js/main.js"></script>
+    </body>
+</html>
