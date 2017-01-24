@@ -11,28 +11,33 @@ var gulp = require("gulp"),
     cssmin = require("gulp-clean-css"),
     rimraf = require("rimraf"),
     browserSync = require("browser-sync"),
+    imagemin = require("gulp-imagemin"),
+    pngquant = require("imagemin-pngquant"),
     reload = browserSync.reload;
 var path = {
     build : {
-        html : "./",
-        script : "./build/js/",
-        style : "./build/css/"
+        html: "./",
+        script: "./build/js/",
+        style: "./build/css/",
+        img: "./build/img/"
     },
     src : {
-        html : "./src/index.html",
-        script : "./src/ts/main.ts",
-        style : "./src/style/main.scss"
+        html: "./src/index.html",
+        script: "./src/ts/main.ts",
+        style: "./src/style/main.scss",
+        img: "./src/img/**/*.*"
     },
     watch : {
-        html : "",
-        script : "./src/ts/**/*.ts",
-        style : "./src/style/**/*.scss"
+        html: "",
+        script: "./src/ts/**/*.ts",
+        style: "./src/style/**/*.scss",
+        img: "./src/img/**/*.*"
     },
-    clean : "./build/"
+    clean: "./build/"
 };
 var configServer = {
     server : {
-        baseDir : "./"
+        baseDir: "./"
     },
     tunnel: true,
     host: "localhost",
@@ -68,6 +73,17 @@ gulp.task("style:build", function() {
         .pipe(gulp.dest(path.build.style))
         .pipe(reload({stream: true}));
 });
+gulp.task("image:build", function () {
+    gulp.src(path.src.img) //Выберем наши картинки
+        .pipe(imagemin({ //Сожмем их
+            progressive: true,
+            svgoPlugins: [{removeViewBox: false}],
+            use: [pngquant()],
+            interlaced: true
+        }))
+        .pipe(gulp.dest(path.build.img)) //И бросим в build
+        .pipe(reload({stream: true}));
+});
 gulp.task("watch", function() {
     watch([path.watch.html], function(event, cb) {
         gulp.start("html:build");
@@ -85,5 +101,5 @@ gulp.task("webserver", function() {
 gulp.task("clean", function(cb) {
     rimraf(path.clean, cb);
 });
-gulp.task("build", ["html:build", "script:build", "style:build"]);
+gulp.task("build", ["html:build", "script:build", "style:build", "image:build"]);
 gulp.task("default", ["build", "webserver", "watch"]);
