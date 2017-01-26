@@ -55,7 +55,9 @@ body {
   font-size: 57px;
   font-weight: 500;
 }
-
+.selected {
+  box-shadow: inset 0 0 15px rgba(255, 30, 33, 1);
+}
 
 .footer {
   font-weight: bolder;
