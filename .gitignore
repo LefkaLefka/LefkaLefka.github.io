@@ -1,5 +1,5 @@
 .idea/
 node_modules/
 *.log
-src/ts/*.js
-src/ts/*.map
+src/ts/**/*.js
+src/ts/**/*.map
