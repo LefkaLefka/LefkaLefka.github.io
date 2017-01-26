@@ -90,8 +90,9 @@ export class Game {
                     // если есть победитель
                     if (temp != 0) {
                         console.log("win");
+                        return "sd";
                         // temp === this.sizeField ? setTimeout(windowEndGame, 800, "you won", "rgba(0, 255, 0, 0.5)") : setTimeout(windowEndGame, 800, "toe win", "rgba(255, 0, 0, 0.5)");
-                        break;
+                        // break;
                     }
                 }
             }
@@ -99,6 +100,7 @@ export class Game {
             if (this.countOfMove === this.sizeField)
             {
                 console.log("no");
+                return false;
                 // заканчиваем игру
                 // setTimeout(windowEndGame, 800, "draw", "rgba(0, 0, 0, 0.5)");
             }
