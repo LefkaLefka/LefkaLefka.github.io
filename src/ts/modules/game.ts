@@ -89,20 +89,27 @@ export class Game {
                         diagonalR : 0;
                     // если есть победитель
                     if (temp != 0) {
-                        console.log("win");
-                        return "sd";
-                        // temp === this.sizeField ? setTimeout(windowEndGame, 800, "you won", "rgba(0, 255, 0, 0.5)") : setTimeout(windowEndGame, 800, "toe win", "rgba(255, 0, 0, 0.5)");
-                        // break;
+                        if(temp > 0) {
+                            if(this.players.player1 === "x" ) {
+                                this.score = {
+                                    player1 : this.score.player1 + 1,
+                                    player2 : this.score.player2,
+                                };
+                            } else {
+                                this.score = {
+                                    player1 : this.score.player1,
+                                    player2 : this.score.player2 + 1,
+                                };
+                            }
+                        }
+                        return true;
                     }
                 }
             }
-            // если все походили(клеток на поле не осталось)
-            if (this.countOfMove === this.sizeField)
+            // если клеток на поле не осталось
+            if (this.countOfMove === (this.sizeField * this.sizeField))
             {
-                console.log("no");
                 return false;
-                // заканчиваем игру
-                // setTimeout(windowEndGame, 800, "draw", "rgba(0, 0, 0, 0.5)");
             }
         }
     }
@@ -118,15 +125,28 @@ export class Game {
             this.field[i][j] = this.whoseMove === 0 ? // Select player
                 (this.players.player1 === "x" ? 1 : -1) : // Select "x" or "o" for set in array player1 moves
                 (this.players.player2 === "x" ? 1 : -1); // Select "x" or "o" for set in array player2 moves
+            // If we made move increasing counter.
+            ++this.countOfMove;
+            // Check for win.
+            if(this.check()) {
+                this.render();
+                //
+                // this.startGame();
+            }
             // Change next player.
             this.whoseMove ^= 1;
-            // If we made move increasing counter
-            ++this.countOfMove;
-            this.check();
             // this.whoseMove === 1 - invert, because we change next player above.
             return this.whoseMove === 1 ? this.players.player1 : this.players.player2;
         } else {
             return false;
         }
     }
+    render() {
+        $("[data-player1]").text("Player 1: " + this.score.player1);
+        $("[data-player2]").text("Player 2: " + this.score.player2);
+    }
 }
+
+// отобразить кто ходит крестиками кто ноликами
+// подсветить ячейки с выиграшной комбинацией
+// перезапуск игры после того как кто-то выиграл или ничьи
