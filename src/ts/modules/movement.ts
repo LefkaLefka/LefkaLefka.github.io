@@ -8,7 +8,11 @@ interface Elements {
 export class Movement {
     game : Game;
     elements : Elements;
-    keyCodes : number[] = [87, 119, 65, 97, 83, 115, 68, 100, 37, 38, 39, 40];
+    // u - up, d - down, l - left, r - right, s - set
+    //                     u   d   l   r   s
+    keyCodes : number[] = [87, 83, 65, 68, 90, // wasd
+                           38, 40, 37, 39, 48, 96, 45]; // arrow
+    index : number = 4;
     /**
      * Constructor.
      * @param _game Class where defined "game rules".
@@ -62,11 +66,13 @@ export class Movement {
      * When click on element.
      */
     private click(index: number, context : any, el : Object) {
-        let i : number = Math.floor(index / context.game.sizeField);
-        let j : number = index - context.game.sizeField * i;
-        let result : any = context.game.move(i, j);
+        // Find index in array.
+        let i : number = Math.floor(index / context.game.sizeField),
+            j : number = index - context.game.sizeField * i,
+            // Find result of a player's turn.
+            result : any = context.game.move(i, j);
+        // If result correct - show.
         if(result !== false) {
-            // console.log(el);
             $(el).text(result);
         }
     }
@@ -77,10 +83,70 @@ export class Movement {
     private moving(keyCode : number, context : any) {
         for(let code of context.keyCodes) {
             if(keyCode === code) {
-                console.log(keyCode);
+                // up
+                if((keyCode === 87) || (keyCode === 38)) {
+                    context.checkIndex(-3, context);
+                }
+                // down
+                if((keyCode === 83) || (keyCode === 40)) {
+                    context.checkIndex(3, context);
+                }
+                // left
+                if((keyCode === 65) || (keyCode === 37)) {
+                    context.checkIndex(-1, context);
+                }
+                // right
+                if((keyCode === 68) || (keyCode === 39)) {
+                    context.checkIndex(1, context);
+                }
+                // set
+                if((keyCode === 90) || (keyCode === 48) || (keyCode === 96) || (keyCode === 45)) {
+                    // "UnShow" previous element.
+                    context.unRender(context.index);
+                    // Find index in array.
+                    let i : number = Math.floor(context.index / context.game.sizeField),
+                        j : number = context.index - context.game.sizeField * i,
+                        // Find result of a player's turn.
+                        result : any = context.game.move(i, j);
+                    // If result correct - show.
+                    if(result !== false) {
+                        $(context.elements.cells[context.index]).text(result);
+                    }
+                    // Set default value.
+                    context.index = 4;
+                }
                 break;
             }
         }
-        // console.log(context.game);
+    }
+    /**
+     * Check index
+     * @param shift The number of shifts.
+     * @param context Context of "Movement".
+     */
+    private checkIndex(shift : number, context : any) {
+        // If index is within the bounds [0..8] - 9 elements.
+        if(context.index + shift < 9 && context.index + shift >= 0) {
+            // "UnShow" previous selected element.
+            context.unRender(context.index);
+            // Find new index.
+            context.index += shift;
+            // Show new element.
+            context.render(context.index);
+        }
+    }
+    /**
+     * Show element with index.
+     * @param index Index of showing element.
+     */
+    private render(index : number) {
+        $(this.elements.cells[index]).addClass("selected");
+    }
+    /**
+     * "UnShow" element with index.
+     * @param index Index of showing element.
+     */
+    private unRender(index : number) {
+        $(this.elements.cells[index]).removeClass("selected");
     }
 }
