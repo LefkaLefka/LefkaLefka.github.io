@@ -18,21 +18,25 @@ export class Game {
     // player1 - 0, player2 - 1.
     whoseMove : number;
     countOfMove : number;
+    endGame : boolean;
     /**
      * Constructor of game, where set main array and players score.
      */
     constructor() {
-        // 1 - x, 0 - o, -1 - null.
-        this.field = [[0, 0, 0],
-                      [0, 0, 0],
-                      [0, 0, 0]];
         this.score = {
             player1 : 0,
             player2 : 0
         };
         this.startGame();
     }
-    private startGame() {
+    /**
+     * Stat the game. Set default values.
+     */
+    startGame() {
+        // 1 - x, 0 - o, -1 - null.
+        this.field = [[0, 0, 0],
+                      [0, 0, 0],
+                      [0, 0, 0]];
         if(Math.random() > 0.5) {
             this.players = {
                 player1 : "x",
@@ -49,67 +53,75 @@ export class Game {
             this.whoseMove = 1;
         }
         this.countOfMove = 0;
+        this.endGame = false;
     }
-    private check() : boolean | string {
-        // если есть еще куда ходить
-        if (this.countOfMove <= (this.sizeField * this.sizeField)) {
-            // если больше 5 ходов
-            if (this.countOfMove >= 5) {
-                let horizontal : number, vertical : number,
+    /**
+     * Winning check.
+     * @returns {boolean} Boolean : true - someone win, false - nobody win.
+     */
+    check() : boolean {
+        if(!this.endGame) {
+            // если есть еще куда ходить
+            if (this.countOfMove <= (this.sizeField * this.sizeField)) {
+                // если больше 5 ходов
+                if (this.countOfMove >= 5) {
+                    let horizontal : number, vertical : number,
                     // диагональ вида \
-                    diagonalL : number,
+                        diagonalL : number,
                     // диагональ вида /
-                    diagonalR : number;
-                // проверяем на выиграш
-                for (let i = 0; i < this.sizeField; ++i) {
-                    horizontal = 0;
-                    vertical = 0;
-                    diagonalL = 0;
-                    diagonalR = 0;
-                    for (let j = 0; j < this.sizeField; ++j) {
-                        // проверяем горизонтали
-                        horizontal += this.field[i][j];
-                        // проверяем вертикали
-                        vertical += this.field[j][i];
-                        // диагональ направо
-                        diagonalL += this.field[j][j];
-                        // диагональ налево
-                        diagonalR += this.field[j][this.sizeField - j - 1];
-
-                    }
-                    // если в горизонтале насчитали 3 илли -3 возвращаем горизонталь
-                    // если в горизонтале нет ничего подобного проверяем вертикаль по такому же принципу
-                    // если ничего не нашли проверяем диагональ \
-                    // если ничего не нашли проверяем диагональ /
-                    // в других случаях(нет выигравшего) возврщаем ноль
-                    let temp = Math.abs(horizontal) === this.sizeField ?
-                        horizontal : Math.abs(vertical) === this.sizeField ?
-                        vertical : Math.abs(diagonalL) === this.sizeField ?
-                        diagonalL : Math.abs(diagonalR) === this.sizeField ?
-                        diagonalR : 0;
-                    // если есть победитель
-                    if (temp != 0) {
-                        if(temp > 0) {
-                            if(this.players.player1 === "x" ) {
-                                this.score = {
-                                    player1 : this.score.player1 + 1,
-                                    player2 : this.score.player2,
-                                };
-                            } else {
-                                this.score = {
-                                    player1 : this.score.player1,
-                                    player2 : this.score.player2 + 1,
-                                };
-                            }
+                        diagonalR : number;
+                    // проверяем на выиграш
+                    for (let i = 0; i < this.sizeField; ++i) {
+                        horizontal = 0;
+                        vertical = 0;
+                        diagonalL = 0;
+                        diagonalR = 0;
+                        for (let j = 0; j < this.sizeField; ++j) {
+                            // проверяем горизонтали
+                            horizontal += this.field[i][j];
+                            // проверяем вертикали
+                            vertical += this.field[j][i];
+                            // диагональ направо
+                            diagonalL += this.field[j][j];
+                            // диагональ налево
+                            diagonalR += this.field[j][this.sizeField - j - 1];
                         }
-                        return true;
+                        // если в горизонтале насчитали 3 илли -3 возвращаем горизонталь
+                        // если в горизонтале нет ничего подобного проверяем вертикаль по такому же принципу
+                        // если ничего не нашли проверяем диагональ \
+                        // если ничего не нашли проверяем диагональ /
+                        // в других случаях(нет выигравшего) возврщаем ноль
+                        let temp = Math.abs(horizontal) === this.sizeField ?
+                            horizontal : Math.abs(vertical) === this.sizeField ?
+                            vertical : Math.abs(diagonalL) === this.sizeField ?
+                            diagonalL : Math.abs(diagonalR) === this.sizeField ?
+                            diagonalR : 0;
+                        // если есть победитель
+                        if (temp != 0) {
+                            if(temp > 0) {
+                                if(this.players.player1 === "x" ) {
+                                    this.score = {
+                                        player1 : this.score.player1 + 1,
+                                        player2 : this.score.player2,
+                                    };
+                                } else {
+                                    this.score = {
+                                        player1 : this.score.player1,
+                                        player2 : this.score.player2 + 1,
+                                    };
+                                }
+                            }
+                            this.endGame = true;
+                            return true;
+                        }
                     }
                 }
-            }
-            // если клеток на поле не осталось
-            if (this.countOfMove === (this.sizeField * this.sizeField))
-            {
-                return false;
+                // если клеток на поле не осталось
+                if (this.countOfMove === (this.sizeField * this.sizeField))
+                {
+                    this.endGame = true;
+                    return false;
+                }
             }
         }
     }
@@ -120,33 +132,21 @@ export class Game {
      * @returns {any} Boolean : false - when cell is busy. String : "o" | "x" - when cell is free.
      */
     move(i : number, j : number) : boolean | string {
-        if(this.field[i][j] === 0) {
-            // Fill the array.
-            this.field[i][j] = this.whoseMove === 0 ? // Select player
-                (this.players.player1 === "x" ? 1 : -1) : // Select "x" or "o" for set in array player1 moves
-                (this.players.player2 === "x" ? 1 : -1); // Select "x" or "o" for set in array player2 moves
-            // If we made move increasing counter.
-            ++this.countOfMove;
-            // Check for win.
-            if(this.check()) {
-                this.render();
-                //
-                // this.startGame();
+        if(!this.endGame) {
+            if(this.field[i][j] === 0) {
+                // Fill the array.
+                this.field[i][j] = this.whoseMove === 0 ? // Select player
+                    (this.players.player1 === "x" ? 1 : -1) : // Select "x" or "o" for set in array player1 moves
+                    (this.players.player2 === "x" ? 1 : -1); // Select "x" or "o" for set in array player2 moves
+                // If we made move increasing counter.
+                ++this.countOfMove;
+                // Change next player.
+                this.whoseMove ^= 1;
+                // this.whoseMove === 1 - invert, because we change next player above.
+                return this.whoseMove === 1 ? this.players.player1 : this.players.player2;
+            } else {
+                return false;
             }
-            // Change next player.
-            this.whoseMove ^= 1;
-            // this.whoseMove === 1 - invert, because we change next player above.
-            return this.whoseMove === 1 ? this.players.player1 : this.players.player2;
-        } else {
-            return false;
         }
     }
-    render() {
-        $("[data-player1]").text("Player 1: " + this.score.player1);
-        $("[data-player2]").text("Player 2: " + this.score.player2);
-    }
 }
-
-// отобразить кто ходит крестиками кто ноликами
-// подсветить ячейки с выиграшной комбинацией
-// перезапуск игры после того как кто-то выиграл или ничьи
