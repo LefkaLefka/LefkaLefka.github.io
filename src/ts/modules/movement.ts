@@ -113,23 +113,22 @@ export class Movement {
         }
     }
     /**
-     *
-     * @param i
-     * @param j
-     * @param context
+     * Make move(put "x" or "o").
+     * @param i Coordinates x of array(gameField) in game.
+     * @param j Coordinates y of array(gameField) in game.
+     * @param context Context of "Movement".
      */
     private put(i, j, context) {
         let result : any = context.game.move(i, j);
         if(result !== false) {
             $(context.elements.cells[i * context.game.sizeField + j]).text(result);
         }
-        if(context.game.check() || context.game.endGame) {
-            // If someone win.
+        // If someone win or end the game.
+        if (context.game.check() || context.game.endGame) {
+            // Show who won in header.
             context.playersInfo(context);
-
-            // отобразить выигрыш - подсветка
-            // установить задержку
-
+            // Highlight for cell.
+            context.illuminate(context);
             setTimeout(() => {
                 context.clearTable(context);
                 context.game.startGame();
@@ -184,5 +183,55 @@ export class Movement {
         // console.log(context.game.score);
         $("[data-player1]").text("Player 1(" + context.game.players.player1 + "): " + context.game.score.player1);
         $("[data-player2]").text("Player 2(" + context.game.players.player2 + "): " + context.game.score.player2);
+    }
+    /**
+     * Illumination for the winning combination.
+     * @param context Context of "Movement".
+     */
+    private illuminate(context : any) {
+        if((context.game.field[0][0] !== 0) && (context.game.field[0][0] === context.game.field[0][1]) && (context.game.field[0][0] === context.game.field[0][2])) {
+            context.selectLine(context, 0 , 1, 2);
+        }
+        if((context.game.field[1][0] !== 0) && (context.game.field[1][0] === context.game.field[1][1]) && (context.game.field[1][0] === context.game.field[1][2])) {
+            context.selectLine(context, 3, 4, 5);
+        }
+        if((context.game.field[2][0] !== 0) && (context.game.field[2][0] === context.game.field[2][1]) && (context.game.field[2][0] === context.game.field[2][2])) {
+            context.selectLine(context, 5, 7, 8);
+        }
+
+        if((context.game.field[0][0] !== 0) && (context.game.field[0][0] === context.game.field[1][0]) && (context.game.field[0][0] === context.game.field[2][0])) {
+            context.selectLine(context, 0, 3, 6);
+        }
+        if((context.game.field[0][1] !== 0) && (context.game.field[0][1] === context.game.field[1][1]) && (context.game.field[0][1] === context.game.field[2][1])) {
+            context.selectLine(context, 1, 4, 7);
+        }
+        if((context.game.field[0][2] !== 0) && (context.game.field[0][2] === context.game.field[1][2]) && (context.game.field[0][2] === context.game.field[2][2])) {
+            context.selectLine(context, 2, 5, 8);
+        }
+
+        if((context.game.field[0][0] !== 0) && (context.game.field[0][0] === context.game.field[1][1]) && (context.game.field[0][0] === context.game.field[2][2])) {
+            context.selectLine(context, 0, 4, 8);
+        }
+        if((context.game.field[0][2] !== 0) && (context.game.field[0][2] === context.game.field[1][1]) && (context.game.field[0][2] === context.game.field[2][0])) {
+            context.selectLine(context, 2, 4, 6);
+        }
+    }
+    /**
+     * Illumination for three cells with auto of after 1 second.
+     * @param context Context of "Movement".
+     * @param i First cell.
+     * @param j Second cell.
+     * @param k Third cell.
+     */
+    private selectLine(context: any, i : number, j : number, k : number) {
+        context.render(i);
+        context.render(j);
+        context.render(k);
+
+        setTimeout(() => {
+            context.unRender(i);
+            context.unRender(j);
+            context.unRender(k);
+        }, 1000);
     }
 }
