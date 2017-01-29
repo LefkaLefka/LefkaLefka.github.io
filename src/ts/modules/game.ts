@@ -97,9 +97,21 @@ export class Game {
                             diagonalL : Math.abs(diagonalR) === this.sizeField ?
                             diagonalR : 0;
                         // если есть победитель
-                        if (temp != 0) {
-                            if(temp > 0) {
+                        if (temp !== 0) {
+                            if(temp === this.sizeField) {
                                 if(this.players.player1 === "x" ) {
+                                    this.score = {
+                                        player1 : this.score.player1 + 1,
+                                        player2 : this.score.player2,
+                                    };
+                                } else {
+                                    this.score = {
+                                        player1 : this.score.player1,
+                                        player2 : this.score.player2 + 1,
+                                    };
+                                }
+                            } else {
+                                if(this.players.player1 === "o" ) {
                                     this.score = {
                                         player1 : this.score.player1 + 1,
                                         player2 : this.score.player2,
