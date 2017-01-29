@@ -20,6 +20,7 @@ export class Movement {
     constructor(_game : Game) {
         this.initElements();
         this.game = _game;
+        this.playersInfo(this);
     }
     /**
      * Init element for set event listener.
@@ -46,7 +47,7 @@ export class Movement {
         $(el).on("click", (eventObject : JQueryEventObject) => {
             this.elements.cells.each((i, el) => {
                 if(el === eventObject.target) {
-                    callback(i, context, eventObject.target);
+                    callback(i, context);
                 }
             });
         });
@@ -65,16 +66,11 @@ export class Movement {
     /**
      * When click on element.
      */
-    private click(index: number, context : any, el : Object) {
+    private click(index: number, context : any) {
         // Find index in array.
         let i : number = Math.floor(index / context.game.sizeField),
-            j : number = index - context.game.sizeField * i,
-            // Find result of a player's turn.
-            result : any = context.game.move(i, j);
-        // If result correct - show.
-        if(result !== false) {
-            $(el).text(result);
-        }
+            j : number = index - context.game.sizeField * i;
+        context.put(i, j, context);
     }
     /**
      * When move to element.
@@ -105,18 +101,40 @@ export class Movement {
                     context.unRender(context.index);
                     // Find index in array.
                     let i : number = Math.floor(context.index / context.game.sizeField),
-                        j : number = context.index - context.game.sizeField * i,
+                        j : number = context.index - context.game.sizeField * i;
                         // Find result of a player's turn.
-                        result : any = context.game.move(i, j);
-                    // If result correct - show.
-                    if(result !== false) {
-                        $(context.elements.cells[context.index]).text(result);
-                    }
+                    context.put(i, j, context);
+
                     // Set default value.
                     context.index = 4;
                 }
                 break;
             }
+        }
+    }
+    /**
+     *
+     * @param i
+     * @param j
+     * @param context
+     */
+    private put(i, j, context) {
+        let result : any = context.game.move(i, j);
+        if(result !== false) {
+            $(context.elements.cells[i * context.game.sizeField + j]).text(result);
+        }
+        if(context.game.check() || context.game.endGame) {
+            // If someone win.
+            context.playersInfo(context);
+
+            // отобразить выигрыш - подсветка
+            // установить задержку
+
+            setTimeout(() => {
+                context.clearTable(context);
+                context.game.startGame();
+                context.playersInfo(context);
+            }, 1000);
         }
     }
     /**
@@ -148,5 +166,23 @@ export class Movement {
      */
     private unRender(index : number) {
         $(this.elements.cells[index]).removeClass("selected");
+    }
+    /**
+     * Clear text in table cells.
+     * @param context Context of "Movement".
+     */
+    private clearTable(context : any) {
+        context.elements.cells.each((i, el) => {
+            $(el).text("");
+        });
+    }
+    /**
+     * Show users score.
+     * @param context Context of "Movement".
+     */
+    private playersInfo(context : any) {
+        // console.log(context.game.score);
+        $("[data-player1]").text("Player 1(" + context.game.players.player1 + "): " + context.game.score.player1);
+        $("[data-player2]").text("Player 2(" + context.game.players.player2 + "): " + context.game.score.player2);
     }
 }
