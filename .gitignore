@@ -3,3 +3,4 @@ node_modules/
 *.log
 src/ts/**/*.js
 src/ts/**/*.map
+*.db
